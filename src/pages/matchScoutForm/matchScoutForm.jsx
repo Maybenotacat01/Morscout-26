@@ -17,33 +17,17 @@ const CHOICEYESNO = ["Yes", "No"];
 
 const DEFAULT_STATE = {
   // Auto
-  autoL1Scores: 0,
-  autoL2Scores: 0,
-  autoL3Scores: 0,
-  autoL4Scores: 0,
-  autoL1Attempts: 0,
-  autoL2Attempts: 0,
-  autoL3Attempts: 0,
-  autoL4Attempts: 0,
-  autoProcessorAlgaeScores: 0,
-  autoProcessorAlgaeAttempts: 0,
-  autoNetAlgaeScores: 0,
-  autoNetAlgaeAttempts: 0,
-  leftStartingZone: "No",
+  autoFuelScores: 0,
+  autoFuelAttempts: 0,
+  autoHumanPlayerRefuel: "No",
+  autoNeutralZoneRefuel: "No",
+  autoClimb: "No",
 
   // Teleop
-  teleopL1Scores: 0,
-  teleopL2Scores: 0,
-  teleopL3Scores: 0,
-  teleopL4Scores: 0,
-  teleopL1Attempts: 0,
-  teleopL2Attempts: 0,
-  teleopL3Attempts: 0,
-  teleopL4Attempts: 0,
-  teleopProcessorAlgaeScores: 0,
-  teleopProcessorAlgaeAttempts: 0,
-  teleopNetAlgaeScores: 0,
-  teleopNetAlgaeAttempts: 0,
+  teleopFuelScores: 0,
+  teleopFuelAttempts: 0,
+  teleopHumanPlayerRefuelAttempts: 0,
+  teleopNeutralZoneRefuelAttempts: 0,
 
 
   // Climb
@@ -54,6 +38,8 @@ const DEFAULT_STATE = {
 
   // General
   robotSpeed: "None",
+  intakePerformance: "None",
+  shooterPerformance: "None",
   // defenseRating: "-",
   generalComments: "",
 
@@ -210,87 +196,82 @@ const MatchScoutForm = ({ username }) => {
       <form onSubmit={handleSubmit} className="match-scout">
         {/* Auto Scoring Section */}
         <div className="scout-section">
-          <h2>Auto Period - Scoring</h2>
+          <h2>Auto Period</h2>
 
-          {/* Auto Coral Scoring */}
+          {/* Auto Fuel Scoring */}
           <div className="scoring-subsection">
-            <h3>Coral Scoring</h3>
-            {SCORING_LEVELS.slice(1).map((level) => (
-              <div key={`auto${level}`} className="scoring-group">
-                <div className="scoring-label-container">
-                  <div className="scoring-label">{level}</div>
-                  <ScoringCounter
-                    scoredValue={formState[`auto${level}Scores`]}
-                    attemptedValue={formState[`auto${level}Attempts`]}
-                    onScoredChange={(value) => handleNotesScored(`auto${level}Scores`, value)}
-                    onAttemptedChange={(value) =>
-                      setFormState(prevState => ({
-                        ...prevState,
-                        [`auto${level}Attempts`]: Math.max(value, prevState[`auto${level}Scores`])
-                      }))
-                    }
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Auto Algae Scoring */}
-          <div className="scoring-subsection">
-            <h3>Algae Scoring</h3>
+            <h3>Fuel Scoring</h3>
             <div className="counter-group">
-              <div className="scoring-label">Processor</div>
+              <div className="scoring-label">Fuel</div>
               <ScoringCounter
-                scoredValue={formState.autoProcessorAlgaeScores}
-                attemptedValue={formState.autoProcessorAlgaeAttempts}
+                scoredValue={formState.autoFuelScores}
+                attemptedValue={formState.autoFuelAttempts}
                 onScoredChange={(value) =>
                   setFormState(prevState => ({
                     ...prevState,
-                    autoProcessorAlgaeScores: value,
-                    autoProcessorAlgaeAttempts: Math.max(value, prevState.autoProcessorAlgaeAttempts)
+                    autoFuelScores: value,
+                    autoFuelAttempts: Math.max(value, prevState.autoFuelAttempts)
                   }))
                 }
                 onAttemptedChange={(value) =>
                   setFormState(prevState => ({
                     ...prevState,
-                    autoProcessorAlgaeAttempts: Math.max(value, prevState.autoProcessorAlgaeScores)
-                  }))
-                }
-              />
-            </div>
-            <div className="counter-group">
-              <div className="scoring-label">Net</div>
-              <ScoringCounter
-                scoredValue={formState.autoNetAlgaeScores}
-                attemptedValue={formState.autoNetAlgaeAttempts}
-                onScoredChange={(value) =>
-                  setFormState(prevState => ({
-                    ...prevState,
-                    autoNetAlgaeScores: value,
-                    autoNetAlgaeAttempts: Math.max(value, prevState.autoNetAlgaeAttempts)
-                  }))
-                }
-                onAttemptedChange={(value) =>
-                  setFormState(prevState => ({
-                    ...prevState,
-                    autoNetAlgaeAttempts: Math.max(value, prevState.autoNetAlgaeScores)
+                    autoFuelAttempts: Math.max(value, prevState.autoFuelScores)
                   }))
                 }
               />
             </div>
           </div>
 
-          <div className="starting-zone-section">
-            <Checkbox
-              label="Left Starting Zone?"
-              checked={formState.leftStartingZone === "Yes"}
-              onChange={(checked) =>
-                setFormState(prevState => ({
-                  ...prevState,
-                  leftStartingZone: checked ? "Yes" : "No"
-                }))
-              }
-            />
+          {/* Human Player Refuel */}
+          <div className="checkbox-group">
+            <h3>Human Player Refuel</h3>
+            <div className="checkbox-row">
+              <Checkbox
+                label="Human Player Refueled?"
+                checked={formState.autoHumanPlayerRefuel === "Yes"}
+                onChange={(checked) =>
+                  setFormState(prevState => ({
+                    ...prevState,
+                    autoHumanPlayerRefuel: checked ? "Yes" : "No"
+                  }))
+                }
+              />
+            </div>
+          </div>
+
+          {/* Neutral Zone Refuel */}
+          <div className="checkbox-group">
+            <h3>Neutral Zone Refuel</h3>
+            <div className="checkbox-row">
+              <Checkbox
+                label="Neutral Zone Refueled?"
+                checked={formState.autoNeutralZoneRefuel === "Yes"}
+                onChange={(checked) =>
+                  setFormState(prevState => ({
+                    ...prevState,
+                    autoNeutralZoneRefuel: checked ? "Yes" : "No"
+                  }))
+                }
+              />
+            </div>
+          </div>
+
+          {/* Auto Climb */}
+          <div className="checkbox-group">
+            <h3>Auto Climb</h3>
+            <div className="checkbox-row">
+              <Checkbox
+                label="Climbed in Auto?"
+                checked={formState.autoClimb === "Yes"}
+                onChange={(checked) =>
+                  setFormState(prevState => ({
+                    ...prevState,
+                    autoClimb: checked ? "Yes" : "No"
+                  }))
+                }
+              />
+            </div>
           </div>
         </div>
 
@@ -298,68 +279,72 @@ const MatchScoutForm = ({ username }) => {
         <div className="scout-section">
           <h2>Teleop Period - Scoring</h2>
 
-          {/* Teleop Coral Scoring */}
+          {/* Teleop Fuel Scoring */}
           <div className="scoring-subsection">
-            <h3>Coral Scoring</h3>
-            {SCORING_LEVELS.slice(1).map((level) => (
-              <div key={`teleop${level}`} className="scoring-group">
-                <div className="scoring-label-container">
-                  <div className="scoring-label">{level}</div>
-                  <ScoringCounter
-                    scoredValue={formState[`teleop${level}Scores`]}
-                    attemptedValue={formState[`teleop${level}Attempts`]}
-                    onScoredChange={(value) => handleNotesScored(`teleop${level}Scores`, value)}
-                    onAttemptedChange={(value) =>
-                      setFormState(prevState => ({
-                        ...prevState,
-                        [`teleop${level}Attempts`]: Math.max(value, prevState[`teleop${level}Scores`])
-                      }))
-                    }
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Teleop Algae Scoring */}
-          <div className="scoring-subsection">
-            <h3>Algae Scoring</h3>
+            <h3>Fuel Scoring</h3>
             <div className="counter-group">
-              <div className="scoring-label">Processor</div>
+              <div className="scoring-label">Fuel</div>
               <ScoringCounter
-                scoredValue={formState.teleopProcessorAlgaeScores}
-                attemptedValue={formState.teleopProcessorAlgaeAttempts}
+                scoredValue={formState.teleopFuelScores}
+                attemptedValue={formState.teleopFuelAttempts}
                 onScoredChange={(value) =>
                   setFormState(prevState => ({
                     ...prevState,
-                    teleopProcessorAlgaeScores: value,
-                    teleopProcessorAlgaeAttempts: Math.max(value, prevState.teleopProcessorAlgaeAttempts)
+                    teleopFuelScores: value,
+                    teleopFuelAttempts: Math.max(value, prevState.teleopFuelAttempts)
                   }))
                 }
                 onAttemptedChange={(value) =>
                   setFormState(prevState => ({
                     ...prevState,
-                    teleopProcessorAlgaeAttempts: Math.max(value, prevState.teleopProcessorAlgaeScores)
+                    teleopFuelAttempts: Math.max(value, prevState.teleopFuelScores)
                   }))
                 }
               />
             </div>
+          </div>
+
+          {/* Human Player Refuel Attempts */}
+          <div className="scoring-subsection">
+            <h3>Human Player Refuel Attempts</h3>
             <div className="counter-group">
-              <div className="scoring-label">Net</div>
+              <div className="scoring-label">Attempts</div>
               <ScoringCounter
-                scoredValue={formState.teleopNetAlgaeScores}
-                attemptedValue={formState.teleopNetAlgaeAttempts}
+                scoredValue={formState.teleopHumanPlayerRefuelAttempts}
+                attemptedValue={formState.teleopHumanPlayerRefuelAttempts}
                 onScoredChange={(value) =>
                   setFormState(prevState => ({
                     ...prevState,
-                    teleopNetAlgaeScores: value,
-                    teleopNetAlgaeAttempts: Math.max(value, prevState.teleopNetAlgaeAttempts)
+                    teleopHumanPlayerRefuelAttempts: value
                   }))
                 }
                 onAttemptedChange={(value) =>
                   setFormState(prevState => ({
                     ...prevState,
-                    teleopNetAlgaeAttempts: Math.max(value, prevState.teleopNetAlgaeScores)
+                    teleopHumanPlayerRefuelAttempts: value
+                  }))
+                }
+              />
+            </div>
+          </div>
+          {/* Neutral Zone Refuel */}
+          <div className="scoring-subsection">
+            <h3>Neutral Zone Refuel</h3>
+            <div className="counter-group">
+              <div className="scoring-label">Attempts</div>
+              <ScoringCounter
+                scoredValue={formState.teleopNeutralZoneRefuelAttempts}
+                attemptedValue={formState.teleopNeutralZoneRefuelAttempts}
+                onScoredChange={(value) =>
+                  setFormState(prevState => ({
+                    ...prevState,
+                    teleopNeutralZoneRefuelAttempts: value
+                  }))
+                }
+                onAttemptedChange={(value) =>
+                  setFormState(prevState => ({
+                    ...prevState,
+                    teleopNeutralZoneRefuelAttempts: value
                   }))
                 }
               />
@@ -376,19 +361,19 @@ const MatchScoutForm = ({ username }) => {
                 <h3>Climb Level Attempted</h3>
                 <div className="checkbox-row">
                   <Checkbox
-                    label="Deep"
-                    checked={formState.climbLevel === "Deep"}
-                    onChange={(checked) => handleSingleOptionSelect('climbLevel', "Deep", checked)}
+                    label="L1"
+                    checked={formState.climbLevel === "L1"}
+                    onChange={(checked) => handleSingleOptionSelect('climbLevel', "L1", checked)}
                   />
                   <Checkbox
-                    label="Shallow"
-                    checked={formState.climbLevel === "Shallow"}
-                    onChange={(checked) => handleSingleOptionSelect('climbLevel', "Shallow", checked)}
+                    label="L2"
+                    checked={formState.climbLevel === "L2"}
+                    onChange={(checked) => handleSingleOptionSelect('climbLevel', "L2", checked)}
                   />
                   <Checkbox
-                    label="Parked"
-                    checked={formState.climbLevel === "Parked"}
-                    onChange={(checked) => handleSingleOptionSelect('climbLevel', "Parked", checked)}
+                    label="L3"
+                    checked={formState.climbLevel === "L3"}
+                    onChange={(checked) => handleSingleOptionSelect('climbLevel', "L3", checked)}
                   />
                 </div>
               </div>
@@ -470,6 +455,46 @@ const MatchScoutForm = ({ username }) => {
             onSelect={(value) => setFormState({ ...formState, defenseRating: value })}
             defaultOption={formState.defenseRating}
           /> */}
+          <div className="checkbox-group">
+            <h3>Intake Performance</h3>
+            <div className="checkbox-row">
+              <Checkbox
+                label="Good"
+                checked={formState.intakePerformance === "Good"}
+                onChange={(checked) => handleSingleOptionSelect('intakePerformance', "Good", checked)}
+              />
+              <Checkbox
+                label="Okay"
+                checked={formState.intakePerformance === "Okay"}
+                onChange={(checked) => handleSingleOptionSelect('intakePerformance', "Okay", checked)}
+              />
+              <Checkbox
+                label="Bad"
+                checked={formState.intakePerformance === "Bad"}
+                onChange={(checked) => handleSingleOptionSelect('intakePerformance', "Bad", checked)}
+              />
+            </div>
+          </div>
+          <div className="checkbox-group">
+            <h3>Shooter Performance</h3>
+            <div className="checkbox-row">
+              <Checkbox
+                label="Good"
+                checked={formState.shooterPerformance === "Good"}
+                onChange={(checked) => handleSingleOptionSelect('shooterPerformance', "Good", checked)}
+              />
+              <Checkbox
+                label="Okay"
+                checked={formState.shooterPerformance === "Okay"}
+                onChange={(checked) => handleSingleOptionSelect('shooterPerformance', "Okay", checked)}
+              />
+              <Checkbox
+                label="Bad"
+                checked={formState.shooterPerformance === "Bad"}
+                onChange={(checked) => handleSingleOptionSelect('shooterPerformance', "Bad", checked)}
+              />
+            </div>
+          </div>
           <TextBox
             label="General Comments"
             name="generalComments"

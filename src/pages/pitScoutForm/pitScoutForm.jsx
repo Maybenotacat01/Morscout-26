@@ -37,12 +37,17 @@ const DEFAULT_STATE = {
   },
   autoNotesScored: "",      // Auto Capabilities
 
-  estimatedCycleTime: "",   // Teleop Capabilities
-  pickupFromFloor: "",      // Teleop Capabilities
+  cycleTimeHumanPlayer: "", // Teleop Capabilities
+  cycleTimeNeutralZone: "", // Teleop Capabilities
+  maxFuelPickup: "",        // Teleop Capabilities
 
   climb: "",                // Climb Capabilities
-  climbTime: "",           // Climb Capabilities
+  autoClimb: "",           // Climb Capabilities
+  reachableClimb: "",      // Climb Capabilities
 
+  bumpOrTrench: "",         // Robot Navigation
+
+  shooterType: "",          // Shooter Information
   additionalComments: "",   // Additional Information
 };
 
@@ -216,16 +221,23 @@ const PitScoutForm = ({ username }) => {
           </div>
         </div>
         <TextInput
-          label="Estimated Cycle Time (human player station to shooting)? (s)"
-          name="estimatedCycleTime"
-          value={formState.estimatedCycleTime}
+          label="Estimated Cycle Time - Human Player Station (s)"
+          name="cycleTimeHumanPlayer"
+          value={formState.cycleTimeHumanPlayer}
           onChange={handleChange}
         />
 
         <TextInput
-          label="Where can coral be picked up?"
-          name="pickupFromFloor"
-          value={formState.pickupFromFloor}
+          label="Estimated Cycle Time - Neutral Zone (s)"
+          name="cycleTimeNeutralZone"
+          value={formState.cycleTimeNeutralZone}
+          onChange={handleChange}
+        />
+
+        <TextInput
+          label="Maximum Fuel Pickup"
+          name="maxFuelPickup"
+          value={formState.maxFuelPickup}
           onChange={handleChange}
         />
 
@@ -236,11 +248,25 @@ const PitScoutForm = ({ username }) => {
           defaultOption={formState.climb}
         />
 
-        <TextInput
-          label="Climb Time (s)"
-          name="climbTime"
-          value={formState.climbTime}
-          onChange={handleChange}
+        <Dropdown
+          label="Can do auto climb?"
+          options={CHOICEYESNO}
+          onSelect={(value) => handleDropdownSelect(value, "autoClimb")}
+          defaultOption={formState.autoClimb}
+        />
+
+        <Dropdown
+          label="Reachable Climb"
+          options={["-", "L1", "L2", "L3"]}
+          onSelect={(value) => handleDropdownSelect(value, "reachableClimb")}
+          defaultOption={formState.reachableClimb}
+        />
+
+        <Dropdown
+          label="Does the robot go over the bumps or under the trench?"
+          options={["-", "Over the Bumps", "Under the Trench"]}
+          onSelect={(value) => handleDropdownSelect(value, "bumpOrTrench")}
+          defaultOption={formState.bumpOrTrench}
         />
 
         <div className="checkbox-group">
@@ -278,6 +304,13 @@ const PitScoutForm = ({ username }) => {
             />
           </div>
         </div>
+
+        <TextBox
+          label="Shooter Type"
+          name="shooterType"
+          value={formState.shooterType}
+          onChange={handleChange}
+        />
 
         <TextInput
           label="Additional Comments"
