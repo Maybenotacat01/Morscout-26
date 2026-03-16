@@ -14,7 +14,7 @@ const MainPage = ({ username }) => {
         </div>
         <div className="main-hero-badge">
           <span className="main-hero-badge-dot" />
-          2025cala · Live
+          2026calas · Live
         </div>
       </div>
 
