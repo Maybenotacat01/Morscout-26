@@ -34,6 +34,7 @@ export const teamMembers = [
   "Ryan Kwon",
   "Seunghyeon Woo",
   "Shailee Talit",
+  "Siarhel Safanovich",
   "Sophie Hong",
   "Stefan Harnagea",
   "Steven Lee",
