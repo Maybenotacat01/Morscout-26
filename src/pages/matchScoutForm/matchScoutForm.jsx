@@ -11,42 +11,45 @@ import Checkbox from "../../components/checkbox/checkbox";
 import Dropdown from "../../components/dropdown/dropdown";
 import useScrollToTop from '../../hooks/useScrollToTop';
 
-// const CHOICEYESNOBLANK = ["-", "Yes", "No"];
-const SCORING_LEVELS = ["-", "L1", "L2", "L3", "L4"];
-const CHOICEYESNO = ["Yes", "No"];
+const CHOICEYESNO = ["-", "Yes", "No"];
 
 const DEFAULT_STATE = {
   // Auto
   autoFuelScores: 0,
-  autoFuelAttempts: 0,
+  autoFuelComments: "",
   autoHumanPlayerRefuel: "No",
   autoNeutralZoneRefuel: "No",
   autoClimb: "No",
+  autoComments: "",
 
   // Teleop
   teleopFuelScores: 0,
-  teleopFuelAttempts: 0,
-  teleopHumanPlayerRefuelAttempts: 0,
-  teleopNeutralZoneRefuelAttempts: 0,
+  teleopFuelComments: "",
+  teleopHumanPlayerRefuelScores: 0,
+  teleopNeutralZoneRefuelScores: 0,
+  teleopSendingFromNeutralZone: "-",
+  teleopComments: "",
 
 
   // Climb
   climbLevel: "None",
-  climbSuccess: "No",
+  climbSuccess: "-",
   climbAttemptTime: "None",
   climbComments: "",
 
   // General
   robotSpeed: "None",
   intakePerformance: "None",
-  shooterPerformance: "None",
+  shooterAccuracy: "None",
   // defenseRating: "-",
   generalComments: "",
 
   // Robot Reliability
+  matchConsistency: "-",       // Match Consistency dropdown
   brokeDown: "-",              // Yes/No dropdown
   breakdownDetails: "",       // Text box for details
   completelyBroken: false,    // Checkbox for "Did not move/broken"
+  reliabilityComments: "",    // Reliability Comments
 };
 
 
@@ -68,6 +71,13 @@ const MatchScoutForm = ({ username }) => {
     delete requiredFields.climbComments;
     delete requiredFields.generalComments;
     delete requiredFields.breakdownDetails;
+    delete requiredFields.autoComments;
+    delete requiredFields.autoFuelComments;
+    delete requiredFields.autoFuelScores;
+    delete requiredFields.teleopComments;
+    delete requiredFields.teleopFuelComments;
+    delete requiredFields.teleopFuelScores;
+    delete requiredFields.reliabilityComments;
 
     // Track incomplete fields
     const incompleteFields = [];
@@ -80,7 +90,6 @@ const MatchScoutForm = ({ username }) => {
 
     if (incompleteFields.length > 0) {
       toast.error(`Incomplete fields: ${incompleteFields.join(', ')}`);
-      console.log('Incomplete fields:', incompleteFields);
       setFormSubmitted(false);
       return;
     }
@@ -108,17 +117,6 @@ const MatchScoutForm = ({ username }) => {
     }
   };
 
-  const handleNotesScored = (name, value) => {
-    const level = name.match(/L\d/)[0];
-    const phase = name.includes('auto') ? 'auto' : 'teleop';
-
-    setFormState(prevState => ({
-      ...prevState,
-      [name]: value,
-      [`${phase}${level}Attempts`]: Math.max(value, prevState[`${phase}${level}Attempts`])
-    }));
-  };
-
   const handleSingleOptionSelect = (field, option, value) => {
     setFormState(prevState => ({
       ...prevState,
@@ -141,39 +139,11 @@ const MatchScoutForm = ({ username }) => {
     }));
   };
 
-  const handleScoreIncrement = (type) => {
+  const handleScoreChange = (field, value) => {
     setFormState((prev) => ({
       ...prev,
-      [type + "Scores"]: prev[type + "Scores"] + 1,
-      [type + "Attempts"]: prev[type + "Attempts"] + 1  // Always increment attempts with scores
+      [field]: Math.max(0, value),
     }));
-  };
-
-  const handleScoreDecrement = (type) => {
-    setFormState((prev) => {
-      if (prev[type + "Scores"] <= 0) return prev;
-      return {
-        ...prev,
-        [type + "Scores"]: prev[type + "Scores"] - 1
-      };
-    });
-  };
-
-  const handleAttemptIncrement = (type) => {
-    setFormState((prev) => ({
-      ...prev,
-      [type + "Attempts"]: prev[type + "Attempts"] + 1
-    }));
-  };
-
-  const handleAttemptDecrement = (type) => {
-    setFormState((prev) => {
-      if (prev[type + "Attempts"] <= prev[type + "Scores"]) return prev;
-      return {
-        ...prev,
-        [type + "Attempts"]: prev[type + "Attempts"] - 1
-      };
-    });
   };
 
   const handleCheckboxChange = (name) => {
@@ -200,27 +170,23 @@ const MatchScoutForm = ({ username }) => {
 
           {/* Auto Fuel Scoring */}
           <div className="scoring-subsection">
-            <h3>Fuel Scoring</h3>
-            <div className="counter-group">
-              <div className="scoring-label">Fuel</div>
-              <ScoringCounter
-                scoredValue={formState.autoFuelScores}
-                attemptedValue={formState.autoFuelAttempts}
-                onScoredChange={(value) =>
-                  setFormState(prevState => ({
-                    ...prevState,
-                    autoFuelScores: value,
-                    autoFuelAttempts: Math.max(value, prevState.autoFuelAttempts)
-                  }))
-                }
-                onAttemptedChange={(value) =>
-                  setFormState(prevState => ({
-                    ...prevState,
-                    autoFuelAttempts: Math.max(value, prevState.autoFuelScores)
-                  }))
-                }
-              />
-            </div>
+            <h3>Fuel Scoring (Rough Estimate)</h3>
+            <input
+              className="number-input"
+              type="number"
+              min="0"
+              name="autoFuelScores"
+              value={formState.autoFuelScores}
+              onChange={handleChange}
+              placeholder="0"
+            />
+            <TextBox
+              label="Fuel Scoring Comments"
+              name="autoFuelComments"
+              value={formState.autoFuelComments}
+              onChange={handleChange}
+              placeholder="Any notes on fuel scoring..."
+            />
           </div>
 
           {/* Human Player Refuel */}
@@ -273,6 +239,16 @@ const MatchScoutForm = ({ username }) => {
               />
             </div>
           </div>
+
+          <div className="comments-section">
+            <TextBox
+              label="Auto Comments"
+              name="autoComments"
+              value={formState.autoComments}
+              onChange={handleChange}
+              placeholder="Any comments about auto period..."
+            />
+          </div>
         </div>
 
         {/* Teleop Scoring Section */}
@@ -281,74 +257,62 @@ const MatchScoutForm = ({ username }) => {
 
           {/* Teleop Fuel Scoring */}
           <div className="scoring-subsection">
-            <h3>Fuel Scoring</h3>
+            <h3>Fuel Scoring (Rough Estimate)</h3>
+            <input
+              className="number-input"
+              type="number"
+              min="0"
+              name="teleopFuelScores"
+              value={formState.teleopFuelScores}
+              onChange={handleChange}
+              placeholder="0"
+            />
+            <TextBox
+              label="Fuel Scoring Comments"
+              name="teleopFuelComments"
+              value={formState.teleopFuelComments}
+              onChange={handleChange}
+              placeholder="Any notes on fuel scoring..."
+            />
+          </div>
+
+          {/* Human Player Refuel */}
+          <div className="scoring-subsection">
+            <h3>Human Player Refuel</h3>
             <div className="counter-group">
-              <div className="scoring-label">Fuel</div>
               <ScoringCounter
-                scoredValue={formState.teleopFuelScores}
-                attemptedValue={formState.teleopFuelAttempts}
-                onScoredChange={(value) =>
-                  setFormState(prevState => ({
-                    ...prevState,
-                    teleopFuelScores: value,
-                    teleopFuelAttempts: Math.max(value, prevState.teleopFuelAttempts)
-                  }))
-                }
-                onAttemptedChange={(value) =>
-                  setFormState(prevState => ({
-                    ...prevState,
-                    teleopFuelAttempts: Math.max(value, prevState.teleopFuelScores)
-                  }))
-                }
+                scoredValue={formState.teleopHumanPlayerRefuelScores}
+                onScoredChange={(value) => handleScoreChange('teleopHumanPlayerRefuelScores', value)}
               />
             </div>
           </div>
 
-          {/* Human Player Refuel Attempts */}
-          <div className="scoring-subsection">
-            <h3>Human Player Refuel Attempts</h3>
-            <div className="counter-group">
-              <div className="scoring-label">Attempts</div>
-              <ScoringCounter
-                scoredValue={formState.teleopHumanPlayerRefuelAttempts}
-                attemptedValue={formState.teleopHumanPlayerRefuelAttempts}
-                onScoredChange={(value) =>
-                  setFormState(prevState => ({
-                    ...prevState,
-                    teleopHumanPlayerRefuelAttempts: value
-                  }))
-                }
-                onAttemptedChange={(value) =>
-                  setFormState(prevState => ({
-                    ...prevState,
-                    teleopHumanPlayerRefuelAttempts: value
-                  }))
-                }
-              />
-            </div>
-          </div>
           {/* Neutral Zone Refuel */}
           <div className="scoring-subsection">
             <h3>Neutral Zone Refuel</h3>
             <div className="counter-group">
-              <div className="scoring-label">Attempts</div>
               <ScoringCounter
-                scoredValue={formState.teleopNeutralZoneRefuelAttempts}
-                attemptedValue={formState.teleopNeutralZoneRefuelAttempts}
-                onScoredChange={(value) =>
-                  setFormState(prevState => ({
-                    ...prevState,
-                    teleopNeutralZoneRefuelAttempts: value
-                  }))
-                }
-                onAttemptedChange={(value) =>
-                  setFormState(prevState => ({
-                    ...prevState,
-                    teleopNeutralZoneRefuelAttempts: value
-                  }))
-                }
+                scoredValue={formState.teleopNeutralZoneRefuelScores}
+                onScoredChange={(value) => handleScoreChange('teleopNeutralZoneRefuelScores', value)}
               />
             </div>
+          </div>
+
+          <Dropdown
+            label="Was the robot sending balls from the neutral zone?"
+            options={["-", "Yes", "No"]}
+            onSelect={(value) => handleDropdownSelect(value, "teleopSendingFromNeutralZone")}
+            defaultOption={formState.teleopSendingFromNeutralZone}
+          />
+
+          <div className="comments-section">
+            <TextBox
+              label="Teleop Comments"
+              name="teleopComments"
+              value={formState.teleopComments}
+              onChange={handleChange}
+              placeholder="Any comments about teleop period..."
+            />
           </div>
         </div>
 
@@ -378,21 +342,12 @@ const MatchScoutForm = ({ username }) => {
                 </div>
               </div>
 
-              <div className="checkbox-group">
-                <h3>Climb Success</h3>
-                <div className="checkbox-row">
-                  <Checkbox
-                    label="Successful Climb?"
-                    checked={formState.climbSuccess === "Yes"}
-                    onChange={(checked) =>
-                      setFormState(prevState => ({
-                        ...prevState,
-                        climbSuccess: checked ? "Yes" : "No"
-                      }))
-                    }
-                  />
-                </div>
-              </div>
+              <Dropdown
+                label="Climb Success"
+                options={CHOICEYESNO}
+                onSelect={(value) => handleDropdownSelect(value, 'climbSuccess')}
+                defaultOption={formState.climbSuccess}
+              />
 
               <div className="checkbox-group">
                 <h3>Climb Attempt Timing</h3>
@@ -433,21 +388,23 @@ const MatchScoutForm = ({ username }) => {
           <h2>Robot Performance</h2>
           <div className="checkbox-group">
             <h3>Robot Speed</h3>
-            <Checkbox
-              label="Slow"
-              checked={formState.robotSpeed === "Slow"}
-              onChange={(checked) => handleSingleOptionSelect('robotSpeed', "Slow", checked)}
-            />
-            <Checkbox
-              label="Medium"
-              checked={formState.robotSpeed === "Medium"}
-              onChange={(checked) => handleSingleOptionSelect('robotSpeed', "Medium", checked)}
-            />
-            <Checkbox
-              label="Fast"
-              checked={formState.robotSpeed === "Fast"}
-              onChange={(checked) => handleSingleOptionSelect('robotSpeed', "Fast", checked)}
-            />
+            <div className="checkbox-row">
+              <Checkbox
+                label="Fast"
+                checked={formState.robotSpeed === "Fast"}
+                onChange={(checked) => handleSingleOptionSelect('robotSpeed', "Fast", checked)}
+              />
+              <Checkbox
+                label="Medium"
+                checked={formState.robotSpeed === "Medium"}
+                onChange={(checked) => handleSingleOptionSelect('robotSpeed', "Medium", checked)}
+              />
+              <Checkbox
+                label="Slow"
+                checked={formState.robotSpeed === "Slow"}
+                onChange={(checked) => handleSingleOptionSelect('robotSpeed', "Slow", checked)}
+              />
+            </div>
           </div>
           {/* <Dropdown
             label="Defense Rating"
@@ -476,22 +433,22 @@ const MatchScoutForm = ({ username }) => {
             </div>
           </div>
           <div className="checkbox-group">
-            <h3>Shooter Performance</h3>
+            <h3>Shooter Accuracy</h3>
             <div className="checkbox-row">
               <Checkbox
                 label="Good"
-                checked={formState.shooterPerformance === "Good"}
-                onChange={(checked) => handleSingleOptionSelect('shooterPerformance', "Good", checked)}
+                checked={formState.shooterAccuracy === "Good"}
+                onChange={(checked) => handleSingleOptionSelect('shooterAccuracy', "Good", checked)}
               />
               <Checkbox
                 label="Okay"
-                checked={formState.shooterPerformance === "Okay"}
-                onChange={(checked) => handleSingleOptionSelect('shooterPerformance', "Okay", checked)}
+                checked={formState.shooterAccuracy === "Okay"}
+                onChange={(checked) => handleSingleOptionSelect('shooterAccuracy', "Okay", checked)}
               />
               <Checkbox
                 label="Bad"
-                checked={formState.shooterPerformance === "Bad"}
-                onChange={(checked) => handleSingleOptionSelect('shooterPerformance', "Bad", checked)}
+                checked={formState.shooterAccuracy === "Bad"}
+                onChange={(checked) => handleSingleOptionSelect('shooterAccuracy', "Bad", checked)}
               />
             </div>
           </div>
@@ -506,6 +463,13 @@ const MatchScoutForm = ({ username }) => {
         <div className="scout-section">
           <h2>Robot Reliability</h2>
           <div className="form-section">
+            <Dropdown
+              label="Match Consistency (Did performance increase or decrease over the match?)"
+              options={["-", "Increased", "Decreased"]}
+              onSelect={(value) => handleDropdownSelect(value, "matchConsistency")}
+              defaultOption={formState.matchConsistency}
+            />
+
             <Dropdown
               label="Did the robot break down during this match?"
               options={CHOICEYESNO}
@@ -526,10 +490,22 @@ const MatchScoutForm = ({ username }) => {
             )}
 
             <div className="checkbox-group">
-              <Checkbox
-                label="Did not move entire match / completely broken"
-                checked={formState.completelyBroken}
-                onChange={() => handleCheckboxChange('completelyBroken')}
+              <div className="checkbox-row">
+                <Checkbox
+                  label="Did not move entire match / completely broken"
+                  checked={formState.completelyBroken}
+                  onChange={(checked) => setFormState(prev => ({ ...prev, completelyBroken: checked }))}
+                />
+              </div>
+            </div>
+
+            <div className="comments-section">
+              <TextBox
+                label="Reliability Comments"
+                name="reliabilityComments"
+                value={formState.reliabilityComments}
+                onChange={handleChange}
+                placeholder="Any comments about robot reliability..."
               />
             </div>
           </div>

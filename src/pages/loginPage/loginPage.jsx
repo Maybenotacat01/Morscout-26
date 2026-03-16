@@ -16,8 +16,18 @@ const LoginPage = ({ changeUsername }) => {
 
   return (
     <div className="login">
+      <div className="login-brand">
+        <div className="login-brand-title">
+          Mor<span>Scout</span>
+        </div>
+        <div className="login-brand-sub">MorTorq Robotics · Team 1515</div>
+      </div>
+
       <form className="login-form">
-        <label className="login-label">Login</label>
+        <div className="login-form-header">
+          <div className="login-label">Select Your Name</div>
+          <div className="login-label-sub">Choose your name to begin scouting</div>
+        </div>
         <Autocomplete
           options={teamMembers}
           onSelect={handleSelect}

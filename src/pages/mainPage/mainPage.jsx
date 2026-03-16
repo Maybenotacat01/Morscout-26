@@ -1,61 +1,59 @@
-import { useState, useEffect } from 'react';
 import "./mainPage.css";
 import { Link } from 'react-router-dom';
+import { ClipboardList, Swords, Trophy, ChevronRight } from 'lucide-react';
 
 const MainPage = ({ username }) => {
-  const [loading, setLoading] = useState(true);
-  const [stats, setStats] = useState({
-    pitScouts: 0,
-    matchScouts: 0,
-    totalTeams: 0
-  });
-
-  useEffect(() => {
-    // Simulate loading data
-    setTimeout(() => {
-      setStats({
-        pitScouts: 24,
-        matchScouts: 156,
-        totalTeams: 45
-      });
-      setLoading(false);
-    }, 1000);
-  }, []);
-
-  const handleCardClick = (path) => {
-    navigate(path);
-  };
+  const firstName = username ? username.split(' ')[0] : 'Scout';
 
   return (
     <div className="main-page">
-      <header className="page-header">
-        <h1>Welcome, {username}</h1>
-      </header>
-
-      {loading ? (
-        <div className="loading-state">
-          <p>Loading...</p>
+      <div className="main-hero slide-up">
+        <div className="main-hero-greeting">Welcome back</div>
+        <div className="main-hero-name">
+          Hey, <span>{firstName}</span>
         </div>
-      ) : (
-        <div className="content-wrapper">
-          
+        <div className="main-hero-badge">
+          <span className="main-hero-badge-dot" />
+          2025cala · Live
+        </div>
+      </div>
 
-          <div className="action-cards">
-            <Link className="action-card" to={"/pit-team-choice"}>
-              <h2>Pit Scouting</h2>
-              <p>Start scouting robots up close.</p>
-            </Link>
-            <Link className="action-card" to={"/matchscout-team-choice"}>
-              <h2>Match Scouting</h2>
-              <p>Scout matches in real-time.</p>
-            </Link>
-            <Link className="action-card" to={"/rankings"}>
-              <h2>Rankings</h2>
-              <p>Check out the latest team rankings.</p>
-            </Link>
+      <div className="section-label">Quick Actions</div>
+
+      <div className="action-cards">
+        <Link className="action-card slide-up" to="/pit-team-choice" style={{ animationDelay: '0.05s' }}>
+          <div className="action-card-icon">
+            <ClipboardList />
           </div>
-        </div>
-      )}
+          <div className="action-card-body">
+            <h2>Pit Scouting</h2>
+            <p>Inspect robots up close</p>
+          </div>
+          <ChevronRight size={18} className="action-card-arrow" />
+        </Link>
+
+        <Link className="action-card slide-up" to="/matchscout-team-choice" style={{ animationDelay: '0.10s' }}>
+          <div className="action-card-icon">
+            <Swords />
+          </div>
+          <div className="action-card-body">
+            <h2>Match Scouting</h2>
+            <p>Track matches in real-time</p>
+          </div>
+          <ChevronRight size={18} className="action-card-arrow" />
+        </Link>
+
+        <Link className="action-card slide-up" to="/rankings" style={{ animationDelay: '0.15s' }}>
+          <div className="action-card-icon">
+            <Trophy />
+          </div>
+          <div className="action-card-body">
+            <h2>Rankings</h2>
+            <p>View team standings</p>
+          </div>
+          <ChevronRight size={18} className="action-card-arrow" />
+        </Link>
+      </div>
     </div>
   );
 };

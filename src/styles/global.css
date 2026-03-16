@@ -1,42 +1,59 @@
-@import url('https://fonts.googleapis.com/css2?family=Jost:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 
 :root {
-  /* Color System */
+  /* Colors */
   --primary: #FF5F00;
-  --primary-light: rgba(255, 95, 0, 0.15);
-  --background: #121212;
-  --surface: rgba(26, 26, 26, 0.95);
-  --surface-light: rgba(255, 255, 255, 0.1);
-  --text-primary: rgba(255, 255, 255, 0.9);
-  --text-secondary: rgba(255, 255, 255, 0.6);
-  --text-disabled: rgba(255, 255, 255, 0.4);
+  --primary-hover: #FF7520;
+  --primary-dim: rgba(255, 95, 0, 0.10);
+  --primary-glow: rgba(255, 95, 0, 0.22);
+  --primary-border: rgba(255, 95, 0, 0.22);
 
-  /* Spacing System - Adjusted for mobile */
+  --background: #07090E;
+  --surface: #0D1018;
+  --surface-2: #141720;
+  --surface-3: #1C2030;
+  --surface-border: rgba(255, 255, 255, 0.055);
+  --surface-border-strong: rgba(255, 255, 255, 0.1);
+
+  --text-primary: #EEF0F6;
+  --text-secondary: #6E7590;
+  --text-muted: rgba(255, 255, 255, 0.28);
+
+  --red: #FF3030;
+  --red-dim: rgba(255, 48, 48, 0.10);
+  --red-border: rgba(255, 48, 48, 0.25);
+  --blue: #0A7CFF;
+  --blue-dim: rgba(10, 124, 255, 0.10);
+  --blue-border: rgba(10, 124, 255, 0.25);
+
+  /* Spacing */
   --spacing-xs: 4px;
   --spacing-sm: 8px;
   --spacing-md: 12px;
   --spacing-lg: 16px;
   --spacing-xl: 24px;
+  --spacing-2xl: 32px;
+  --spacing-3xl: 48px;
 
-  /* Border Radius */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
+  /* Radius */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
   --radius-full: 9999px;
 
   /* Shadows */
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.2);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 1px 6px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.55);
+  --shadow-orange: 0 4px 24px rgba(255, 95, 0, 0.18);
 
   /* Transitions */
-  --transition-fast: 0.15s ease;
+  --transition-fast: 0.12s ease;
   --transition-normal: 0.2s ease;
-  --transition-slow: 0.3s ease;
-
+  --transition-slow: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Base Styles */
 * {
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
@@ -45,138 +62,80 @@
 }
 
 body {
-  width: 100%;
-  height: 100%;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   background-color: var(--background);
   color: var(--text-primary);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
   touch-action: manipulation;
-  line-height: 1.5;
   font-weight: 400;
-  color-scheme: light dark;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Common Components */
-.card {
-  background: var(--surface);
-  border-radius: var(--radius-lg);
-  padding: var(--spacing-lg);
-  margin-bottom: var(--spacing-md);
-  border: 1px solid var(--surface-light);
+h1, h2, h3, h4 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.3px;
 }
 
-/* Mobile-first button styles */
-.button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  padding: 16px;
-  background: var(--primary);
-  color: white;
-  border: none;
-  border-radius: var(--radius-full);
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform 0.2s;
-  -webkit-tap-highlight-color: transparent;
+button, input, textarea, select {
+  font-family: 'Space Grotesk', sans-serif;
 }
 
-.button:active {
-  transform: scale(0.98);
-}
-
-.button.secondary {
-  background: var(--surface);
-  border: 1px solid var(--surface-light);
-}
-
-/* Mobile-first input styles */
-.input {
-  width: 100%;
-  padding: 16px;
-  background: var(--surface);
-  border: 1px solid var(--surface-light);
-  border-radius: var(--radius-full);
-  color: var(--text-primary);
-  font-size: 16px;
-}
-
-.input:focus {
-  outline: none;
-  border-color: var(--primary);
-}
-
-/* Layout Utilities */
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 var(--spacing-lg);
-}
-
-.flex {
-  display: flex;
-}
-
-.flex-col {
-  flex-direction: column;
-}
-
-.items-center {
-  align-items: center;
-}
-
-.justify-between {
-  justify-content: space-between;
-}
-
-.gap-sm {
-  gap: var(--spacing-sm);
-}
-
-.gap-md {
-  gap: var(--spacing-md);
-}
-
-.gap-lg {
-  gap: var(--spacing-lg);
-}
+/* Scrollbar */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255, 95, 0, 0.25); border-radius: 2px; }
 
 /* Animations */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.fade-in {
-  animation: fadeIn var(--transition-normal);
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
-.slide-up {
-  animation: slideUp var(--transition-normal);
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.fade-in { animation: fadeIn var(--transition-normal) both; }
+.slide-up { animation: slideUp 0.28s ease-out both; }
+
+/* Shared loading spinner */
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 2px solid var(--surface-3);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto;
+}
+
+/* Shared state containers */
+.state-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-3xl) var(--spacing-xl);
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.state-container p {
+  font-size: 15px;
 }

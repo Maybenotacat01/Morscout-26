@@ -1,59 +1,22 @@
 import "./scoringCounter.css";
 
-const ScoringCounter = ({
-  scoredValue,
-  attemptedValue,
-  onScoredChange,
-  onAttemptedChange,
-}) => {
+const ScoringCounter = ({ scoredValue, onScoredChange }) => {
   return (
-    <div className="scoring-container">
-      <div>
-        <div className="scoring-counter">
-          <span>Scored</span>
-        </div>
-        <div className="scoring-controls">
-          <button
-            type="button"
-            onClick={() => onScoredChange(Math.max(0, scoredValue - 1))}
-          >
-            -
-          </button>
-          <span className="scoring-value">{scoredValue}</span>
-          <button 
-            type="button" 
-            onClick={() => {
-              onScoredChange(scoredValue + 1);
-              onAttemptedChange(attemptedValue + 1);  // Always increment attempts when scoring
-            }}
-          >
-            +
-          </button>
-        </div>
-      </div>
-      <div>
-        <div className="scoring-counter">
-          <span>Attempted</span>
-        </div>
-
-        <div className="scoring-controls">
-          <button
-            type="button"
-            onClick={() => {
-              const newAttempted = Math.max(scoredValue, attemptedValue - 1);
-              onAttemptedChange(newAttempted);
-            }}
-          >
-            -
-          </button>
-          <span className="scoring-value">{attemptedValue}</span>
-          <button
-            type="button"
-            onClick={() => onAttemptedChange(attemptedValue + 1)}
-          >
-            +
-          </button>
-        </div>
+    <div className="scoring-counter">
+      <div className="scoring-controls">
+        <button
+          type="button"
+          onClick={() => onScoredChange(Math.max(0, scoredValue - 1))}
+        >
+          -
+        </button>
+        <span className="scoring-value">{scoredValue}</span>
+        <button
+          type="button"
+          onClick={() => onScoredChange(scoredValue + 1)}
+        >
+          +
+        </button>
       </div>
     </div>
   );

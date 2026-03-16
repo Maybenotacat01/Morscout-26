@@ -1,24 +1,28 @@
-.pit-button{
-    width: 385px;
-    height: 65px;
-    text-align: center;
-    background-color:#434343 ;
-    color: white;
-    margin: 5px 0;
-    margin-bottom: 12px;
-    font-size: x-large;
+.pit-button {
+  width: 100%;
+  padding: 16px;
+  text-align: left;
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-lg);
+  color: var(--text-primary);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  letter-spacing: -0.1px;
 }
 
-@media screen and (max-width: 400px) {
-    .pit-button{
-        width: 285px;
-        height: 65px;
-        text-align: center;
-        background-color:#434343 ;
-        color: white;
-        margin: 5px 0;
-        margin-bottom: 12px;
-        font-size: x-large;
-    }
-    
+.pit-button:hover {
+  background: var(--surface-2);
+  border-color: var(--primary-border);
+  color: var(--primary);
+}
+
+.pit-button:active {
+  transform: scale(0.98);
 }

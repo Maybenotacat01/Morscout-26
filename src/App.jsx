@@ -36,7 +36,7 @@ function App() {
           style: {
             background: 'var(--background)',
             color: 'var(--text-primary)',
-            border: '1px solid var(--surface-light)',
+            border: '1px solid var(--surface-border)',
             borderRadius: 'var(--radius-md)',
           },
         }}

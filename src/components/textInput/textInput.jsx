@@ -1,13 +1,13 @@
 import "./textInput.css"
 
-const TextInput = ({ label, name, value, onChange }) => {
+const TextInput = ({ label, name, value, onChange, type = "text" }) => {
   return (
     <div className='input-field'>
       <label htmlFor={name}>{label} :</label>
       <input
         autoComplete="off"
         className='text-input'
-        type="text"
+        type={type}
         id={name}
         name={name}
         value={value}

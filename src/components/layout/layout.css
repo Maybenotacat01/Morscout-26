@@ -6,27 +6,30 @@
 
 .page-content {
   flex: 1;
-  padding-bottom: 72px;
+  padding-bottom: 80px;
 }
 
+/* Navbar */
 .navbar {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  background: var(--surface);
-  border-top: 1px solid var(--surface-light);
-  padding: env(safe-area-inset-bottom);
+  z-index: 100;
+  background: rgba(13, 16, 24, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--surface-border);
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 .nav-content {
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
-  max-width: 500px;
+  max-width: 480px;
   margin: 0 auto;
-  padding: 8px;
-  gap: 4px;
+  padding: 6px 8px;
 }
 
 .nav-link {
@@ -34,26 +37,31 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 8px 12px;
+  gap: 4px;
+  padding: 8px 14px;
   color: var(--text-secondary);
   text-decoration: none;
   border: none;
   background: none;
   cursor: pointer;
-  flex: 0 1 auto;
-  min-width: 80px;
-  max-width: 90px;
+  border-radius: var(--radius-lg);
+  transition: color var(--transition-fast);
+  min-width: 64px;
+  position: relative;
 }
 
 .nav-link svg {
-  width: 28px;
-  height: 28px;
-  transition: transform 0.2s ease;
+  width: 22px;
+  height: 22px;
+  stroke-width: 1.8;
+  transition: transform var(--transition-normal);
 }
 
-.nav-link:hover svg {
-  transform: scale(1.1);
+.nav-link span {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
 }
 
 .nav-link.active {
@@ -61,14 +69,19 @@
 }
 
 .nav-link.active svg {
-  transform: scale(1.1);
+  transform: translateY(-1px);
 }
 
-.nav-link span {
-  font-size: 13px;
-  font-weight: 500;
-  text-align: center;
-  white-space: nowrap;
+.nav-link.active::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 32px;
+  height: 2px;
+  background: var(--primary);
+  border-radius: 0 0 4px 4px;
 }
 
 .layout {
@@ -85,6 +98,6 @@
 .page-container {
   flex: 1;
   overflow-y: auto;
-  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  -webkit-overflow-scrolling: touch;
   position: relative;
-} 
+}

@@ -89,7 +89,7 @@ const Button = ({
   return (
     <button 
       className={`team-button ${className} ${isLoading ? 'loading' : ''}`}
-      disabled={status === "working" || isLoading} 
+      disabled={isLoading}
       onClick={handleTeamButtonClick}
     >
       {isLoading ? (
